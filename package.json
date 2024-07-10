@@ -1,6 +1,7 @@
 {
-  "name": "ngx-word-rotation",
-  "version": "0.0.1",
+  "name": "@omnedia/ngx-word-rotation",
+  "version": "1.0.0",
+  "description": "A simple component library to animate text.",
   "peerDependencies": {
     "@angular/common": "^17.3.0",
     "@angular/core": "^17.3.0"
@@ -8,5 +9,17 @@
   "dependencies": {
     "tslib": "^2.3.0"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "keywords": [
+    "rxjs",
+    "npm",
+    "words",
+    "rotation",
+    "animation"
+  ],
+  "repository": {
+    "url": "https://github.com/omnedia/ngx-word-rotation"
+  },
+  "author": "Markus Block (markus.block@omnedia.com)",
+  "license": "MIT"
 }

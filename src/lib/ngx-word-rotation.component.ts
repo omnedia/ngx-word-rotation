@@ -45,6 +45,9 @@ import { interval, Subject, takeUntil } from "rxjs";
   ],
 })
 export class NgxWordRotationComponent implements OnInit, OnDestroy {
+  @Input("styleClass")
+  styleClass?: string;
+
   @Input("words")
   words!: string[];
 
@@ -76,6 +79,7 @@ export class NgxWordRotationComponent implements OnInit, OnDestroy {
 
   protected word1?: string;
   protected word2?: string;
+  protected activeWord!: string;
 
   ngOnInit(): void {
     if (!this.words || this.words.length <= 0) {
@@ -89,6 +93,7 @@ export class NgxWordRotationComponent implements OnInit, OnDestroy {
     }
 
     this.word1 = this.words[0];
+    this.activeWord = this.words[0];
 
     this.rotateWords();
   }
@@ -106,6 +111,8 @@ export class NgxWordRotationComponent implements OnInit, OnDestroy {
     interval(this.wordDelaySpeed)
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
+        this.activeWord = this.words[wordsIndex];
+
         if (this.word1) {
           this.word1 = undefined;
           setTimeout(() => {

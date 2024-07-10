@@ -1,29 +1,23 @@
-<div class="om-rotating-word" *ngIf="!reverseAnimation">
+<div class="om-rotating-word" [ngClass]="styleClass" *ngIf="!reverseAnimation">
   <p *ngIf="word1" [@rotateWords]>
     {{ word1 }}
   </p>
   <p *ngIf="word2" [@rotateWords]>
     {{ word2 }}
   </p>
-  <span *ngIf="word1">
-    {{ word1 }}
-  </span>
-  <span *ngIf="word2">
-    {{ word2 }}
+  <span>
+    {{ activeWord }}
   </span>
 </div>
 
-<div class="om-rotating-word" *ngIf="reverseAnimation">
+<div class="om-rotating-word" [ngClass]="styleClass" *ngIf="reverseAnimation">
   <p *ngIf="word1" [@rotateWordsReverse]>
     {{ word1 }}
   </p>
   <p *ngIf="word2" [@rotateWordsReverse]>
     {{ word2 }}
   </p>
-  <span *ngIf="word1">
-    {{ word1 }}
-  </span>
-  <span *ngIf="word2">
-    {{ word2 }}
+  <span>
+    {{ activeWord }}
   </span>
 </div>

@@ -1,24 +1,67 @@
-# NgxWordRotation
+# ngx-word-rotation
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.0.
+`@omnedia/ngx-word-rotation` is an Angular library designed to facilitate word rotation animations within Angular applications.
 
-## Code scaffolding
+## Features
+- Rotate words within your Angular application.
+- Easily customizable.
 
-Run `ng generate component component-name --project ngx-word-rotation` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project ngx-word-rotation`.
-> Note: Don't forget to add `--project ngx-word-rotation` or else it will be added to the default project in your `angular.json` file. 
+## Installation
 
-## Build
+Install the library using npm:
 
-Run `ng build ngx-word-rotation` to build the project. The build artifacts will be stored in the `dist/` directory.
+```bash
+npm install @omnedia/ngx-word-rotation
+```
 
-## Publishing
+## Usage
 
-After building your library with `ng build ngx-word-rotation`, go to the dist folder `cd dist/ngx-word-rotation` and run `npm publish`.
+Import the `NgxWordRotationComponent` in your Angular module:
 
-## Running unit tests
+```typescript
 
-Run `ng test ngx-word-rotation` to execute the unit tests via [Karma](https://karma-runner.github.io).
+import { NgxWordRotationComponent } from '@omnedia/ngx-word-rotation';
 
-## Further help
+@NgModule({
+  imports: [
+    NgxWordRotationComponent
+  ],
+})
+export class AppModule { }
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Use the component in your template:
+
+```html
+<om-word-rotation [words]="['Hello', 'World']"></om-word-rotation>
+```
+
+## API
+
+```html
+<om-word-rotation
+  [words]="words"
+  [reverseAnimation]="reverseAnimation"
+  [wordDelay]="wordDelay"
+  [enterDelay]="enterDelay"
+  styleClass="your-custom-class"
+></om-word-rotation>
+```
+
+Starts the word rotation effect.
+
+- `words`: An array of strings to be animated.
+- `reverseAnimation`: (optional): Reverses the animation direction. Default is false.
+- `wordDelay`: (optional): The delay between the animation to the next word / how long a word stays in milliseconds. Default is 2500.
+- `enterDelay`: (optional): The animation delay for the entering word in milliseconds. Default is 200.
+- `styleClass`: (optional): Add a class to the `<div>` wrapper tag.
+
+## Contributing
+
+Contributions are welcome. Please submit a pull request or open an issue to discuss your ideas.
+
+## License
+
+This project is licensed under the MIT License.
+
+For more information, visit the [GitHub repository](https://github.com/omnedia/ngx-word-rotation)
