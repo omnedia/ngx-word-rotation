@@ -19,15 +19,16 @@ npm install @omnedia/ngx-word-rotation
 Import the `NgxWordRotationComponent` in your Angular module:
 
 ```typescript
-
 import { NgxWordRotationComponent } from '@omnedia/ngx-word-rotation';
 
-@NgModule({
+@Component({
+  ...
   imports: [
-    NgxWordRotationComponent
+    ...
+    NgxWordRotationComponent,
   ],
+  ...
 })
-export class AppModule { }
 ```
 
 Use the component in your template:
