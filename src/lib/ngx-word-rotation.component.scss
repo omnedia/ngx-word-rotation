@@ -1,0 +1,16 @@
+.om-rotating-word {
+  position: relative;
+  width: fit-content;
+  height: fit-content;
+
+  span {
+    visibility: hidden;
+  }
+
+  p {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+  }
+}
