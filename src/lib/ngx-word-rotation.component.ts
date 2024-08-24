@@ -106,7 +106,7 @@ export class NgxWordRotationComponent implements OnInit, OnDestroy {
   }
 
   rotateWords(): void {
-    let wordsIndex = 0;
+    let wordsIndex = 1;
 
     interval(this.wordDelaySpeed)
       .pipe(takeUntil(this.destroy$))
@@ -115,14 +115,17 @@ export class NgxWordRotationComponent implements OnInit, OnDestroy {
 
         if (this.word1) {
           this.word1 = undefined;
+          const tmpIndex = wordsIndex;
+
           setTimeout(() => {
-            this.word2 = this.words[wordsIndex];
+            this.word2 = this.words[tmpIndex];
           }, this.enterDelaySpeed);
         } else {
           this.word2 = undefined;
+          const tmpIndex = wordsIndex;
 
           setTimeout(() => {
-            this.word1 = this.words[wordsIndex];
+            this.word1 = this.words[tmpIndex];
           }, this.enterDelaySpeed);
         }
 
