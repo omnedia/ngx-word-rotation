@@ -1,8 +1,17 @@
 # ngx-word-rotation
 
+<a href="https://ngxui.com" target="_blank" style="display: flex;gap: .5rem;align-items: center;cursor: pointer; padding: 0 0 0 0; height: fit-content;">
+  <img src="https://ngxui.com/assets/img/ngxui-logo.png" style="width: 64px;height: 64px;">
+  <p style="font-weight: bold; padding: 0; margin: 0; font-size: 4rem">NGXUI</p>
+</a>
+
+This Library is part of the NGXUI ecosystem. <br>
+View all available components at https://ngxui.com
+
 `@omnedia/ngx-word-rotation` is an Angular library designed to facilitate word rotation animations within Angular applications.
 
 ## Features
+
 - Rotate words within your Angular application.
 - Easily customizable.
 
@@ -19,27 +28,30 @@ npm install @omnedia/ngx-word-rotation
 Import the `NgxWordRotationComponent` in your Angular module:
 
 ```typescript
-import { NgxWordRotationComponent } from '@omnedia/ngx-word-rotation';
+import {NgxWordRotationComponent} from '@omnedia/ngx-word-rotation';
 
 @Component({
   ...
-  imports: [
-    ...
-    NgxWordRotationComponent,
-  ],
+    imports:
+[
   ...
+    NgxWordRotationComponent,
+],
+...
 })
 ```
 
 Use the component in your template:
 
 ```html
+
 <om-word-rotation [words]="['Hello', 'World']"></om-word-rotation>
 ```
 
 ## API
 
 ```html
+
 <om-word-rotation
   [words]="words"
   [reverseAnimation]="reverseAnimation"
