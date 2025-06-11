@@ -1,4 +1,6 @@
 .om-rotating-word {
+  --om-word-rotation-speed: 250ms;
+
   position: relative;
   width: fit-content;
   height: fit-content;
@@ -9,8 +11,37 @@
 
   p {
     position: absolute;
+    width: fit-content;
     top: 0;
     left: 0;
-    margin: 0;
+    right: 0;
+    margin: auto;
+    opacity: 0;
+    transform: translateY(-100%);
+    transition: opacity var(--om-word-rotation-speed) ease, transform var(--om-word-rotation-speed) ease;
+
+    &.active {
+      opacity: 1;
+      transform: translateY(0);
+      z-index: 1;
+    }
+
+    &.inactive {
+      opacity: 0;
+      transform: translateY(100%);
+      z-index: 0;
+    }
+  }
+
+  &.reverse p {
+    transform: translateY(100%);
+
+    &.active {
+      transform: translateY(0);
+    }
+
+    &.inactive {
+      transform: translateY(-100%);
+    }
   }
 }

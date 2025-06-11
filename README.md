@@ -55,7 +55,7 @@ Use the component in your template:
   [words]="words"
   [reverseAnimation]="reverseAnimation"
   [wordDelay]="wordDelay"
-  [enterDelay]="enterDelay"
+  [animationSpeed]="animationSpeed"
   styleClass="your-custom-class"
 ></om-word-rotation>
 ```
@@ -65,7 +65,7 @@ Starts the word rotation effect.
 - `words`: An array of strings to be animated.
 - `reverseAnimation`: (optional): Reverses the animation direction. Default is false.
 - `wordDelay`: (optional): The delay between the animation to the next word / how long a word stays in milliseconds. Default is 2500.
-- `enterDelay`: (optional): The animation delay for the entering word in milliseconds. Default is 200.
+- `animationSpeed`: (optional): The animation speed for the entering word in milliseconds. Default is 250.
 - `styleClass`: (optional): Add a class to the `<div>` wrapper tag.
 
 ## Contributing

@@ -1,7 +1,18 @@
-import { animate, style, transition, trigger } from "@angular/animations";
-import { CommonModule } from "@angular/common";
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
-import { interval, Subject, takeUntil } from "rxjs";
+import {CommonModule, isPlatformBrowser} from "@angular/common";
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Inject,
+  Input,
+  OnDestroy,
+  PLATFORM_ID,
+  QueryList,
+  signal,
+  ViewChild,
+  ViewChildren
+} from "@angular/core";
+import {interval, Subject, Subscription, takeUntil} from "rxjs";
 
 @Component({
   selector: "om-word-rotation",
@@ -9,42 +20,11 @@ import { interval, Subject, takeUntil } from "rxjs";
   imports: [CommonModule],
   templateUrl: "./ngx-word-rotation.component.html",
   styleUrl: "./ngx-word-rotation.component.scss",
-  animations: [
-    trigger("rotateWords", [
-      transition(":enter", [
-        style({ transform: "translateY(-100%)", opacity: 0 }),
-        animate(
-          "0.2s ease-in",
-          style({ transform: "translateY(0)", opacity: 1 })
-        ),
-      ]),
-      transition(":leave", [
-        style({ transform: "translateY(0)", opacity: 1 }),
-        animate(
-          "0.2s ease-out",
-          style({ transform: "translateY(100%)", opacity: 0 })
-        ),
-      ]),
-    ]),
-    trigger("rotateWordsReverse", [
-      transition(":enter", [
-        style({ transform: "translateY(100%)", opacity: 0 }),
-        animate(
-          "0.2s ease-in",
-          style({ transform: "translateY(0)", opacity: 1 })
-        ),
-      ]),
-      transition(":leave", [
-        style({ transform: "translateY(0)", opacity: 1 }),
-        animate(
-          "0.2s ease-out",
-          style({ transform: "translateY(-100%)", opacity: 0 })
-        ),
-      ]),
-    ]),
-  ],
 })
-export class NgxWordRotationComponent implements OnInit, OnDestroy {
+export class NgxWordRotationComponent implements AfterViewInit, OnDestroy {
+  @ViewChild("OmWordRotationWrapper") wordRotationRef!: ElementRef<HTMLElement>;
+  @ViewChildren('OmRotatingWords') wordsRef!: QueryList<ElementRef<HTMLElement>>;
+
   @Input("styleClass")
   styleClass?: string;
 
@@ -66,36 +46,74 @@ export class NgxWordRotationComponent implements OnInit, OnDestroy {
 
   private wordDelaySpeed: number = 2500;
 
-  @Input("enterDelay")
-  set enterDelay(enterDelay: number) {
-    if (this.wordDelaySpeed - enterDelay < 500) {
-      this.enterDelaySpeed = 200;
+  @Input("animationSpeed")
+  set animationSpeed(animationSpeed: number) {
+    if (this.wordDelaySpeed - animationSpeed < 500) {
+      this.style.update(prev => ({...prev, '--om-word-rotation-speed': 200 + 'ms'}));
     }
 
-    this.enterDelaySpeed = enterDelay;
+    this.style.update(prev => ({...prev, '--om-word-rotation-speed': animationSpeed + 'ms'}));
   }
 
-  private enterDelaySpeed: number = 200;
+  style = signal({});
 
-  protected word1?: string;
-  protected word2?: string;
-  protected activeWord!: string;
+  longestWord = signal('');
+  activeIndex = signal(-1);
+  inactiveIndex = signal(1);
 
-  ngOnInit(): void {
+  isInView = signal(false);
+  private intersectionObserver?: IntersectionObserver;
+  private rotationInterval?: Subscription;
+
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: object
+  ) {
+  }
+
+  ngAfterViewInit(): void {
     if (!this.words || this.words.length <= 0) {
       throw new Error(
         "om-word-rotation: No words were passed to the component!"
       );
     }
 
+    let longestWidth = 0;
+    let longestWord = '';
+    this.wordsRef.forEach((wordRef, index) => {
+      const width = wordRef.nativeElement.getBoundingClientRect().width;
+
+      if (width > longestWidth) {
+        longestWord = this.words[index];
+        longestWidth = width;
+      }
+    });
+
+    this.longestWord.set(longestWord);
+
     if (this.words.length === 1) {
       this.words = [...this.words, ...this.words];
     }
 
-    this.word1 = this.words[0];
-    this.activeWord = this.words[0];
+    if (isPlatformBrowser(this.platformId)) {
+      this.intersectionObserver = new IntersectionObserver(([entry]) => {
+        const wasInView = this.isInView();
+        this.isInView.set(entry.isIntersecting);
 
-    this.rotateWords();
+        if (!wasInView && this.isInView()) {
+          this.activeIndex.set(0);
+          this.inactiveIndex.set(this.words.length - 1);
+          this.rotateWords();
+        }
+
+        if (wasInView && !this.isInView()) {
+          this.rotationInterval?.unsubscribe();
+          this.rotationInterval = undefined;
+          this.activeIndex.set(-1);
+          this.inactiveIndex.set(1);
+        }
+      });
+      this.intersectionObserver.observe(this.wordRotationRef.nativeElement);
+    }
   }
 
   destroy$ = new Subject<void>();
@@ -106,34 +124,17 @@ export class NgxWordRotationComponent implements OnInit, OnDestroy {
   }
 
   rotateWords(): void {
-    let wordsIndex = 1;
-
-    interval(this.wordDelaySpeed)
+    this.rotationInterval = interval(this.wordDelaySpeed)
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this.activeWord = this.words[wordsIndex];
+        this.activeIndex.set((this.activeIndex() + 1) % this.words.length);
+        let inactiveIndex = this.activeIndex() - 1;
 
-        if (this.word1) {
-          this.word1 = undefined;
-          const tmpIndex = wordsIndex;
-
-          setTimeout(() => {
-            this.word2 = this.words[tmpIndex];
-          }, this.enterDelaySpeed);
-        } else {
-          this.word2 = undefined;
-          const tmpIndex = wordsIndex;
-
-          setTimeout(() => {
-            this.word1 = this.words[tmpIndex];
-          }, this.enterDelaySpeed);
+        if (inactiveIndex < 0) {
+          inactiveIndex = this.words.length - 1;
         }
 
-        wordsIndex += 1;
-
-        if (wordsIndex === this.words.length) {
-          wordsIndex = 0;
-        }
+        this.inactiveIndex.set(inactiveIndex);
       });
   }
 }

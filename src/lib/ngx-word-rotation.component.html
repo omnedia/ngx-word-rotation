@@ -1,23 +1,14 @@
-<div class="om-rotating-word" [ngClass]="styleClass" *ngIf="!reverseAnimation">
-  <p *ngIf="word1" [@rotateWords]>
-    {{ word1 }}
-  </p>
-  <p *ngIf="word2" [@rotateWords]>
-    {{ word2 }}
-  </p>
-  <span>
-    {{ activeWord }}
-  </span>
-</div>
+<div class="om-rotating-word" [ngClass]="styleClass" [ngStyle]="style()" [class.reverse]="reverseAnimation"
+     #OmWordRotationWrapper>
+  @for (word of words; track $index) {
+    <p
+      [class.active]="$index === activeIndex()"
+      [class.inactive]="$index === inactiveIndex()"
+      #OmRotatingWords
+    >
+      {{ word }}
+    </p>
+  }
 
-<div class="om-rotating-word" [ngClass]="styleClass" *ngIf="reverseAnimation">
-  <p *ngIf="word1" [@rotateWordsReverse]>
-    {{ word1 }}
-  </p>
-  <p *ngIf="word2" [@rotateWordsReverse]>
-    {{ word2 }}
-  </p>
-  <span>
-    {{ activeWord }}
-  </span>
+  <span>{{ longestWord() }}</span>
 </div>
